@@ -2,6 +2,8 @@
 // Import the module and reference it with the alias vscode in your code below
 const vscode = require('vscode');
 
+const TasksStorage = require('./src/backend/storage');
+
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
 
@@ -14,14 +16,22 @@ function activate(context) {
 	// This line of code will only be executed once when your extension is activated
 	console.log('Congratulations, your extension "todo-list" is now active!');
 
+	const storage = new TasksStorage(context);
+
 	// The command has been defined in the package.json file
 	// Now provide the implementation of the command with  registerCommand
 	// The commandId parameter must match the command field in package.json
-	const disposable = vscode.commands.registerCommand('todo-list.helloWorld', function () {
+	const disposable = vscode.commands.registerCommand('todo-list.helloWorld', async function () {
 		// The code you place here will be executed every time your command is executed
 
 		// Display a message box to the user
 		vscode.window.showInformationMessage('Todo List Extension started successfully!');
+
+		await storage.deleteTask('1779311096977');
+		await storage.deleteTask('1779311122493');
+
+		await storage.addTask('TEST TASK 1');
+		console.log(storage.getTasks());
 
 		var windowPanel = vscode.window.createWebviewPanel(
 			'todoList', // Internal identifier for the panel 
@@ -41,8 +51,15 @@ function getWebviewContent() {
 		<title>Todo List</title>
 	</head>
 	<body>
-		<h1>Todo List Extension</h1>
-		<p>This is a simple todo list extension for Visual Studio Code.</p>
+		<main style="max-width: 420px margin: 24px auto; font-family: sans-serif">
+			<h1>To Do List</h1>
+			<div style="display: flex; gap: 8px; margin-bottom: 16px";>
+				<input id="taskInput" type="text" placeholder="Enter a task" style="flex: 1; padding: 8px;"> </input>
+				<button id="addTaskButton" style="padding: 8px 12 px;">Add Task</button>
+			</div>
+
+			<ul id="taskList" style="padding-left: 20px;"></ul>
+		</main>
 	</body>
 	</html>`;
 }
