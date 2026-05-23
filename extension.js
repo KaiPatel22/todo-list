@@ -27,9 +27,6 @@ function activate(context) {
 		// Display a message box to the user
 		vscode.window.showInformationMessage('Todo List Extension started successfully!');
 
-		await storage.deleteTask('1779311096977');
-		await storage.deleteTask('1779311122493');
-
 		await storage.addTask('TEST TASK 1');
 		console.log(storage.getTasks());
 
@@ -37,7 +34,7 @@ function activate(context) {
 			'todoList', // Internal identifier for the panel 
 			'Visual Studio Todo List Extension', // Title of the panel displayed to the user
 			vscode.ViewColumn.One, // Show the new webview in the first column
-			{} // Webview options (e.g., enable scripts, retain context when hidden, etc.)
+			{enableScripts: true} // Webview options (e.g., enable scripts, retain context when hidden, etc.)
 		);
 		windowPanel.webview.html = getWebviewContent();
 	});
