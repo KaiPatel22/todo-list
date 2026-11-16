@@ -14,12 +14,13 @@ class TasksStorage {
         return this.storage.update(this.key, tasks);
     }
 
-    addTask(task){
+    addTask(task, refs = []){
         const tasks = this.getTasks();
         const newTask = {
             id: Date.now().toString(),
             desc: task,
-            completed: false
+            completed: false,
+            refs // [{ relPath, uri, isFolder }] for each @file/@folder in desc
         }
         tasks.push(newTask);
         console.log('Adding task:', newTask);
