@@ -27,7 +27,10 @@
         }
 
         const deleteButton = document.createElement('button');
-        deleteButton.textContent = 'Delete';
+        deleteButton.className = 'delete-btn'; // styled in extension.js: grey, only visible on hover
+        deleteButton.textContent = '×';
+        deleteButton.title = 'Delete task';
+        deleteButton.setAttribute('aria-label', 'Delete task');
         deleteButton.addEventListener('click', () => {
             vscode.postMessage({ type: 'delete', id: task.id });
         });

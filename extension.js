@@ -126,6 +126,21 @@ function getWebviewContent(webview, extensionUri) {
 		#taskList { list-style: none; padding: 0; margin: 0; }
 		#taskList li { padding: 3px 0; }
 		#taskList li span { overflow-wrap: anywhere; }
+		/* Grey "x" that only shows when the row is hovered (or focused via keyboard) */
+		#taskList .delete-btn {
+			visibility: hidden;
+			padding: 0 4px;
+			font-size: 16px;
+			line-height: 1;
+			color: var(--vscode-descriptionForeground);
+			background: transparent;
+		}
+		#taskList li:hover .delete-btn,
+		#taskList li:focus-within .delete-btn { visibility: visible; }
+		#taskList .delete-btn:hover {
+			color: var(--vscode-foreground);
+			background: transparent;
+		}
 	</style>
 </head>
 <body>
