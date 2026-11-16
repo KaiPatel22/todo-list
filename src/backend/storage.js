@@ -5,8 +5,8 @@ class TasksStorage {
     }
 
     getTasks(){
-        console.log(this.storage.get(this.key, []));
-        return this.storage.get(this.key, []);
+        // Return a copy so callers never mutate the stored array directly
+        return [...this.storage.get(this.key, [])];
     }
 
     saveTasks(tasks){
@@ -27,9 +27,9 @@ class TasksStorage {
     }
 
     toggleTask(id){
-        const tasks = this.getTasks().map(task => {
+        const tasks = this.getTasks().map(task => 
             task.id === id ?  {...task, completed: !task.completed} : task
-        });
+        );
         console.log('Toggling task with id:', id);
         return this.saveTasks(tasks);
     }

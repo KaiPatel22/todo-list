@@ -1,31 +1,70 @@
 (function () {
+    // eslint-disable-next-line no-undef
     const vscode = acquireVsCodeApi();
 
-    document.addEventListener('DOMContentLoaded', () => {
-        const inputField = document.getElementById('taskInput');
-        const addButton = document.getElementById('addTaskButton');
-        const taskList = document.getElementById('taskList');
+    const inputField = document.getElementById('taskInput');
+    const addButton = document.getElementById('addTaskButton');
+    const taskList = document.getElementById('taskList');
 
-        function createListItem(description, id){
-            const listItem = document.createElement('li');
-            listItem.style.display = 'flex';
-            listItem.style.alignItems = 'center';
-            listItem.style.gap = '8px';
+    function createListItem(task) {
+        const listItem = document.createElement('li');
+        listItem.style.display = 'flex';
+        listItem.style.alignItems = 'center';
+        listItem.style.gap = '8px';
 
-            return listItem;
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.checked = task.completed;
+        checkbox.addEventListener('change', () => {
+            vscode.postMessage({ type: 'toggle', id: task.id });
+        });
+
+        const text = document.createElement('span');
+        text.textContent = task.desc; // textContent, not innerHTML, so user text can't inject HTML
+        text.style.flex = '1';
+        if (task.completed) {
+            text.style.textDecoration = 'line-through';
         }
 
+        const deleteButton = document.createElement('button');
+        deleteButton.textContent = 'Delete';
+        deleteButton.addEventListener('click', () => {
+            vscode.postMessage({ type: 'delete', id: task.id });
+        });
 
+        listItem.append(checkbox, text, deleteButton);
+        return listItem;
+    }
+
+    function render(tasks) {
+        taskList.innerHTML = '';
+        tasks.forEach(task => taskList.appendChild(createListItem(task)));
+    }
+
+    function addTask() {
+        const desc = inputField.value.trim();
+        if (!desc) {
+            return;
+        }
+        vscode.postMessage({ type: 'add', desc });
+        inputField.value = '';
+    }
+
+    addButton.addEventListener('click', addTask);
+    inputField.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            addTask();
+        }
     });
 
-});
+    // Handle messages coming FROM the extension
+    window.addEventListener('message', (event) => {
+        const msg = event.data;
+        if (msg.type === 'tasks') {
+            render(msg.tasks);
+        }
+    });
 
-/*
-IDEA 
-
-have code for creating a list item in here, the html needed etc...
-Have event listeners e.g. 
-    add button clicked --> post a message to add a task passing the params such as description and id 
-Pass messages back towards somewhere (idk yet)
-Probably want to post messages to the extension.js and then from there call TaskStorage methods such as addTask
-*/  
+    // Ask for the initial list once the script has loaded
+    vscode.postMessage({ type: 'ready' });
+})();
