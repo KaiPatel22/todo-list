@@ -12,6 +12,12 @@
     let latestQuery = null; // ignore results for queries the user has already typed past
     let pendingRefs = [];  // refs picked for the task currently being typed
 
+    // "src/frontend/app.js" -> "app.js", folders get a trailing slash: "src/frontend/"
+    function displayName(ref) {
+        const name = ref.relPath.split('/').pop();
+        return ref.isFolder ? name + '/' : name;
+    }
+
     function escapeRegExp(text) {
         return text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     }
@@ -37,8 +43,8 @@
             }
             const link = document.createElement('a');
             link.className = 'ref';
-            link.textContent = (ref.isFolder ? '📁 ' : '📄 ') + ref.relPath;
-            link.title = ref.isFolder ? 'Reveal folder in Explorer' : 'Open file';
+            link.textContent = displayName(ref);
+            link.title = ref.relPath + (ref.isFolder ? ' (reveal in Explorer)' : ' (open file)');
             link.href = '#';
             link.addEventListener('click', (e) => {
                 e.preventDefault();
@@ -116,7 +122,19 @@
         refPopup.innerHTML = '';
         items.forEach((item, index) => {
             const option = document.createElement('li');
-            option.textContent = (item.isFolder ? '📁 ' : '📄 ') + item.relPath;
+            const name = document.createElement('span');
+            name.textContent = displayName(item);
+            option.appendChild(name);
+
+            // Show the containing folder dimmed after the name
+            const dir = item.relPath.split('/').slice(0, -1).join('/');
+            if (dir) {
+                const dirLabel = document.createElement('span');
+                dirLabel.className = 'ref-dir';
+                dirLabel.textContent = dir;
+                option.appendChild(dirLabel);
+            }
+            option.title = item.relPath;
             // mousedown + preventDefault keeps focus in the input, so blur doesn't close the popup first
             option.addEventListener('mousedown', (e) => {
                 e.preventDefault();

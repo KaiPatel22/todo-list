@@ -163,18 +163,40 @@ function getWebviewContent(webview, extensionUri) {
 			overflow: hidden;
 			text-overflow: ellipsis;
 		}
+		/* Folder path shown dimmed after the name, like VS Code's quick open */
+		.ref-popup .ref-dir {
+			margin-left: 6px;
+			font-size: 0.9em;
+			opacity: 0.7;
+		}
 		.ref-popup li.active {
 			color: var(--vscode-editorSuggestWidget-selectedForeground, var(--vscode-list-activeSelectionForeground));
 			background: var(--vscode-editorSuggestWidget-selectedBackground, var(--vscode-list-activeSelectionBackground));
 		}
-		/* Clickable @file / @folder reference inside a task */
+		/* Clickable @file / @folder reference inside a task: a small grey box, like Copilot Chat's file pills */
 		.ref {
-			color: var(--vscode-textLink-foreground);
+			display: inline-block;
+			padding: 0 4px;
+			margin: 0 1px;
+			border-radius: 4px;
+			border: 1px solid var(--vscode-widget-border, transparent);
+			background: var(--vscode-textCodeBlock-background, var(--vscode-editorWidget-background));
+			color: var(--vscode-foreground);
+			font-size: 0.92em;
+			line-height: 1.4;
 			text-decoration: none;
+			vertical-align: baseline;
 			cursor: pointer;
 		}
-		.ref:hover { text-decoration: underline; }
-		#taskList li.completed .ref { color: inherit; }
+		.ref:hover {
+			background: var(--vscode-list-hoverBackground);
+			border-color: var(--vscode-focusBorder);
+		}
+		#taskList li.completed .ref {
+			color: inherit;
+			text-decoration: line-through;
+			opacity: 0.7;
+		}
 		input[type="text"] {
 			width: 100%;
 			box-sizing: border-box;
