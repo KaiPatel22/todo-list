@@ -3,7 +3,6 @@
     const vscode = acquireVsCodeApi();
 
     const inputField = document.getElementById('taskInput');
-    const addButton = document.getElementById('addTaskButton');
     const taskList = document.getElementById('taskList');
 
     function createListItem(task) {
@@ -23,11 +22,14 @@
         text.textContent = task.desc; // textContent, not innerHTML, so user text can't inject HTML
         text.style.flex = '1';
         if (task.completed) {
-            text.style.textDecoration = 'line-through';
+            listItem.classList.add('completed'); // greyed out + struck through, styled in extension.js
         }
 
         const deleteButton = document.createElement('button');
-        deleteButton.textContent = 'Delete';
+        deleteButton.className = 'delete-btn'; // styled in extension.js: grey, only visible on hover
+        deleteButton.textContent = '×';
+        deleteButton.title = 'Delete task';
+        deleteButton.setAttribute('aria-label', 'Delete task');
         deleteButton.addEventListener('click', () => {
             vscode.postMessage({ type: 'delete', id: task.id });
         });
@@ -50,7 +52,6 @@
         inputField.value = '';
     }
 
-    addButton.addEventListener('click', addTask);
     inputField.addEventListener('keydown', (e) => {
         if (e.key === 'Enter') {
             addTask();

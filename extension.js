@@ -105,16 +105,24 @@ function getWebviewContent(webview, extensionUri) {
 			font-family: var(--vscode-font-family);
 			font-size: var(--vscode-font-size);
 		}
-		.add-row { display: flex; gap: 6px; margin-bottom: 10px; }
+		.add-row { margin-bottom: 10px; }
 		input[type="text"] {
-			flex: 1;
-			min-width: 0;
+			width: 100%;
+			box-sizing: border-box;
 			padding: 4px 6px;
 			color: var(--vscode-input-foreground);
 			background: var(--vscode-input-background);
 			border: 1px solid var(--vscode-input-border, transparent);
 		}
 		input[type="text"]:focus { outline: 1px solid var(--vscode-focusBorder); }
+		/* Small grey italic hint under the input, aligned to its right edge */
+		.add-hint {
+			margin-top: 3px;
+			text-align: right;
+			font-size: 0.85em;
+			font-style: italic;
+			color: var(--vscode-descriptionForeground);
+		}
 		button {
 			padding: 4px 10px;
 			color: var(--vscode-button-foreground);
@@ -126,12 +134,31 @@ function getWebviewContent(webview, extensionUri) {
 		#taskList { list-style: none; padding: 0; margin: 0; }
 		#taskList li { padding: 3px 0; }
 		#taskList li span { overflow-wrap: anywhere; }
+		#taskList li.completed span {
+			color: var(--vscode-disabledForeground, var(--vscode-descriptionForeground));
+			text-decoration: line-through;
+		}
+		#taskList li.completed input[type="checkbox"] { opacity: 0.6; }
+		#taskList .delete-btn {
+			visibility: hidden;
+			padding: 0 4px;
+			font-size: 20px;
+			line-height: 1;
+			color: var(--vscode-descriptionForeground);
+			background: transparent;
+		}
+		#taskList li:hover .delete-btn,
+		#taskList li:focus-within .delete-btn { visibility: visible; }
+		#taskList .delete-btn:hover {
+			color: var(--vscode-foreground);
+			background: transparent;
+		}
 	</style>
 </head>
 <body>
 	<div class="add-row">
 		<input id="taskInput" type="text" placeholder="Enter a task">
-		<button id="addTaskButton">Add</button>
+		<div class="add-hint">'Enter' to add</div>
 	</div>
 	<ul id="taskList"></ul>
 	<script nonce="${nonce}" src="${scriptUri}"></script>
