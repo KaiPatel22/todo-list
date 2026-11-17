@@ -2,7 +2,7 @@
   "name": "sidebar-todo",
   "displayName": "sidebar-todo",
   "description": "this is a to do list extension",
-  "version": "0.0.1",
+  "version": "1.1.0",
   "publisher": "KaiPatel",
   "icon": "media/icon.png",
   "repository": {
@@ -50,7 +50,7 @@
     "test": "vscode-test"
   },
   "devDependencies": {
-    "@types/vscode": "^1.120.0",
+    "@types/vscode": "^1.74.0",
     "@types/mocha": "^10.0.10",
     "@types/node": "22.x",
     "eslint": "^9.39.3",
