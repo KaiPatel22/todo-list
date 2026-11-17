@@ -1,8 +1,15 @@
 {
-  "name": "todo-list",
-  "displayName": "todo list",
+  "name": "sidebar-todo",
+  "displayName": "sidebar-todo",
   "description": "this is a to do list extension",
   "version": "0.0.1",
+  "publisher": "KaiPatel",
+  "icon": "media/icon.png",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/KaiPatel22/todo-list"
+  },
+  "license":"MIT",
   "engines": {
     "vscode": "^1.120.0"
   },
