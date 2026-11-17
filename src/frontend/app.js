@@ -67,12 +67,32 @@
             vscode.postMessage({ type: 'toggle', id: task.id });
         });
 
+        // textWrap fills the row; the text itself is an inline span so clicks on the
+        // empty space beside it toggle the task while clicks on the words edit it
+        const textWrap = document.createElement('div');
+        textWrap.className = 'task-text-wrap';
         const text = document.createElement('span');
+        text.className = 'task-text';
+        text.title = 'Click to edit';
         renderDesc(text, task);
-        text.style.flex = '1';
+        textWrap.appendChild(text);
+        text.addEventListener('click', (e) => {
+            if (e.target.closest('.ref')) {
+                return; // ref link handles its own click
+            }
+            startEditing(textWrap, text, task);
+        });
         if (task.completed) {
             listItem.classList.add('completed'); // greyed out + struck through, styled in extension.js
         }
+
+        // Clicking anywhere else on the row toggles completion
+        listItem.addEventListener('click', (e) => {
+            if (e.target.closest('input, button, .ref, .task-text')) {
+                return; // checkbox, delete button, file refs and the text have their own behaviour
+            }
+            vscode.postMessage({ type: 'toggle', id: task.id });
+        });
 
         const deleteButton = document.createElement('button');
         deleteButton.className = 'delete-btn'; // styled in extension.js: grey, only visible on hover
@@ -83,8 +103,46 @@
             vscode.postMessage({ type: 'delete', id: task.id });
         });
 
-        listItem.append(checkbox, text, deleteButton);
+        listItem.append(checkbox, textWrap, deleteButton);
         return listItem;
+    }
+
+    // Swaps the task text for an input; Enter or clicking away saves, Escape cancels
+    function startEditing(textWrap, text, task) {
+        const editInput = document.createElement('input');
+        editInput.type = 'text';
+        editInput.className = 'edit-input';
+        editInput.value = task.desc;
+        textWrap.replaceChild(editInput, text);
+        editInput.focus();
+        editInput.setSelectionRange(editInput.value.length, editInput.value.length);
+
+        let finished = false;
+        const finish = (save) => {
+            if (finished) {
+                return;
+            }
+            finished = true;
+            const desc = editInput.value.trim();
+            if (save && desc && desc !== task.desc) {
+                // Keep refs whose "@path" is still in the edited text
+                const refs = (task.refs || []).filter(ref => desc.includes('@' + ref.relPath));
+                vscode.postMessage({ type: 'edit', id: task.id, desc, refs });
+            } else {
+                textWrap.replaceChild(text, editInput); // unchanged or empty: restore original
+            }
+        };
+
+        editInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                finish(true);
+            } else if (e.key === 'Escape') {
+                e.preventDefault();
+                finish(false);
+            }
+        });
+        editInput.addEventListener('blur', () => finish(true));
     }
 
     function render(tasks) {

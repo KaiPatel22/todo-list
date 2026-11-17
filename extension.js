@@ -50,6 +50,9 @@ class TasksViewProvider {
 				case 'toggle':
 					await this.storage.toggleTask(msg.id);
 					break;
+				case 'edit':
+					await this.storage.editTask(msg.id, msg.desc, msg.refs);
+					break;
 				case 'delete':
 					await this.storage.deleteTask(msg.id);
 					break;
@@ -223,7 +226,10 @@ function getWebviewContent(webview, extensionUri) {
 		}
 		button:hover { background: var(--vscode-button-hoverBackground); }
 		#taskList { list-style: none; padding: 0; margin: 0; }
-		#taskList li { padding: 3px 0; }
+		#taskList li { padding: 3px 0; cursor: pointer; }
+		#taskList .task-text-wrap { flex: 1; min-width: 0; }
+		#taskList .task-text { cursor: text; }
+		#taskList .edit-input { padding: 1px 4px; }
 		#taskList li span { overflow-wrap: anywhere; }
 		#taskList li.completed span {
 			color: var(--vscode-disabledForeground, var(--vscode-descriptionForeground));

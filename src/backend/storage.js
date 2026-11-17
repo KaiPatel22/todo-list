@@ -35,6 +35,14 @@ class TasksStorage {
         return this.saveTasks(tasks);
     }
 
+    editTask(id, desc, refs = []){
+        const tasks = this.getTasks().map(task =>
+            task.id === id ? {...task, desc, refs} : task
+        );
+        console.log('Editing task with id:', id);
+        return this.saveTasks(tasks);
+    }
+
     deleteTask(id){
         console.log('Deleting task with id:', id);
         const tasks = this.getTasks().filter(task => task.id !== id);
