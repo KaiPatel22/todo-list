@@ -2,7 +2,7 @@
   "name": "sidebar-todo",
   "displayName": "sidebar-todo",
   "description": "this is a to do list extension",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "publisher": "KaiPatel",
   "icon": "media/icon.png",
   "repository": {
