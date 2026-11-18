@@ -38,4 +38,8 @@ Reduced vscode version requirements (1.120.0 --> 1.74.0).
 
 Updated the todo logic to allow for clicking on text to edit it and clicking in any blank space on the todo to toggle completed
 
+### 1.1.1
+
+Changed from globalState to workspaceState, todo's are now repo/folder specific rather than vscode specific
+
 ---
