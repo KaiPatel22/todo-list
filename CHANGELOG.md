@@ -13,3 +13,6 @@ All notable changes to the "todo-list" extension will be documented in this file
     - Lowered the vscode version requirements 
     - Allow clicking anywhere to mark task as completed (with the exception of the file reference and the text)
     - Allow clicking on text to edit the todo
+
+- Release 1.1.1
+    - Each repo/folder now has its own todo list, instead of one list shared across every VS Code window

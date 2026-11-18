@@ -1,6 +1,6 @@
 class TasksStorage {
     constructor(context) {
-        this.storage = context.globalState;
+        this.storage = context.workspaceState;
         this.key = 'tasks';
     }
 
